@@ -1,0 +1,8 @@
+# Four dependencies, pinned. Nothing else is needed to finish the workshop.
+#
+# pydantic is not listed on purpose: it is installed by fastapi, and pinning
+# fastapi pins the pydantic major version with it.
+fastapi==0.115.6
+uvicorn==0.34.0
+pytest==8.3.4
+httpx==0.28.1
