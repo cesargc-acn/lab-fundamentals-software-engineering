@@ -9,7 +9,6 @@ always type that command yourself instead of going through this script.
     python workshop.py test         run every test (green only at the very end)
     python workshop.py run          start the API with uvicorn
     python workshop.py hint 3       text hints for the TODOs of one stage
-    python workshop.py mutants      optional extension: kill the three mutants
 
 Author-only command, not documented in the student README:
 
@@ -33,7 +32,6 @@ ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
 TESTS = ROOT / "tests"
 SOLUTIONS = ROOT / "solutions"
-MUTANTS = ROOT / "extensions" / "mutants"
 REQUIREMENTS = ROOT / "requirements.txt"
 
 MIN_PYTHON = (3, 10)
@@ -289,44 +287,8 @@ def wrap(text, width):
 
 
 # --------------------------------------------------------------------------
-# mutants (optional extension)
+# helpers
 # --------------------------------------------------------------------------
-
-def command_mutants(_args):
-    mutants = sorted(MUTANTS.glob("mutant_*.py"))
-    if not mutants:
-        print("FAIL: no mutants found in %s." % MUTANTS)
-        return 1
-
-    print("Each mutant is the reference EnrollmentService with one behaviour "
-          "broken. A mutant is 'killed' when at least one of your tests fails.")
-    print("Your own src/ has to pass stages 2 and 3 first, or every mutant "
-          "dies for the wrong reason.")
-    print()
-
-    survivors = []
-    for mutant in mutants:
-        with tempfile.TemporaryDirectory() as workspace:
-            src_dir = build_workspace(Path(workspace), SRC)
-            shutil.copyfile(
-                mutant,
-                src_dir / "course_booking" / "services" / "enrollment_service.py",
-            )
-            argv, printed = pytest_argv("stage2 or stage3", verbose=False)
-            argv.append("-q")
-            print("--- %s" % mutant.name)
-            code = run(printed + " -q", argv, cwd=workspace)
-            print()
-            if code == 0:
-                survivors.append(mutant.name)
-
-    if survivors:
-        print("SURVIVED: %s. No test noticed the change. That is a hole in the "
-              "suite, not a win." % ", ".join(survivors))
-        return 1
-    print("All %d mutants killed." % len(mutants))
-    return 0
-
 
 def build_workspace(workspace, src_dir):
     """Copy pyproject + tests + a given src/ into `workspace`, return its src."""
@@ -472,11 +434,6 @@ def build_parser():
     hint = subparsers.add_parser("hint", help="text hints for the TODOs of one stage")
     hint.add_argument("stage", type=int, help="1 to 5")
     hint.set_defaults(handler=command_hint)
-
-    mutants = subparsers.add_parser(
-        "mutants", help="optional: run your tests against the mutants"
-    )
-    mutants.set_defaults(handler=command_mutants)
 
     verify = subparsers.add_parser("verify-all", help=argparse.SUPPRESS)
     verify.set_defaults(handler=command_verify_all)
