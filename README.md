@@ -14,8 +14,9 @@ breaking the tests that pin down what the old code does.
 running a command in a terminal, and reading a stack trace.
 
 **You need installed:** Git and Python 3.10 or newer. On Windows, start at
-[Python on Windows](#python-on-windows) — it covers installing it from
-scratch and upgrading a version you already have.
+[Git on Windows](#git-on-windows) and [Python on Windows](#python-on-windows) —
+between them they cover installing both from scratch and updating a version you
+already have.
 
 **You do not need to know:** FastAPI, Pydantic, `typing.Protocol`, dependency
 injection, the repository pattern, or `asyncio`. Each stage teaches the piece
@@ -51,6 +52,96 @@ src/course_booking/             your code. Every TODO lives here
 │   └── routers/                stage 4
 └── main.py                     stage 4
 ```
+
+## Git on Windows
+
+Git is how you get the code, and how you keep your own work in commits while
+you move through the stages. Any Git 2.x does everything this lab needs.
+
+Open **PowerShell** (Start menu, type `powershell`) and check first:
+
+```
+git --version
+```
+
+`git version 2.something` means you are done here — go to
+[Python on Windows](#python-on-windows). Anything else (`'git' is not
+recognized`) means it is not installed.
+
+### Install Git
+
+Two ways. Either works, pick one.
+
+**A — the installer from git-scm.com.** Use this one if you are unsure.
+
+1. Open <https://git-scm.com/install/windows>.
+2. Download **Git for Windows/x64 Setup**. Choose ARM64 only if your machine is
+   an ARM device such as a Surface Pro X or a Copilot+ PC.
+3. Run it. The installer asks a long list of questions and **the defaults are
+   right for this lab**, so Next through them — except for these three, which
+   are worth reading:
+   - *Choosing the default editor used by Git*: the default is Vim, which is
+     hard to leave if you have never used it. Pick **Notepad** or **Visual
+     Studio Code** instead.
+   - *Adjusting your PATH environment*: keep the recommended option, **"Git
+     from the command line and also from 3rd-party software"**. That is what
+     makes `git` work in PowerShell and not only in Git Bash.
+   - Leave **Git Credential Manager** enabled. It is what signs you in when you
+     clone or push.
+
+**B — winget, from a terminal.**
+
+```
+winget install --id Git.Git -e --source winget
+```
+
+**Check it worked**, in a *new* PowerShell window (the old one does not see the
+updated `PATH`):
+
+```
+git --version
+```
+
+The installer also gives you a terminal called **Git Bash**. The commands in
+this README assume PowerShell, so stay in PowerShell unless you know why you
+want Git Bash.
+
+### Tell Git who you are
+
+Once per machine, before your first commit. Git refuses to commit without it:
+
+```
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+
+Use the same email as your account on the server you clone from, so your
+commits are attributed to you. `git config --global --list` shows what is set.
+
+### Updating a Git you already have
+
+Unlike Python, Git does not install side by side: a new version replaces the
+old one and keeps your configuration, so there is nothing to clean up
+afterwards. For this lab you do not need the newest version — do this only if
+your Git is genuinely old or something is misbehaving.
+
+```
+git update-git-for-windows          # from Git 2.17.1 onwards, downloads and runs the installer
+winget upgrade --id Git.Git -e      # if you installed it with winget
+```
+
+Either can be replaced by downloading the current installer and running it over
+the top of the old one. Your `.gitconfig` and your repositories are untouched.
+
+### Git problems worth knowing about
+
+| What you see | What to do |
+|---|---|
+| `'git' is not recognized as an internal or external command` | open a *new* terminal first. If it persists, re-run the installer and pick **"Git from the command line and also from 3rd-party software"** on the PATH screen. |
+| a full-screen editor you cannot get out of | that is Vim. Press `Esc`, then type `:q!` and Enter. Then set a friendlier one: `git config --global core.editor notepad`. |
+| `Filename too long` while cloning | `git config --global core.longpaths true`, then clone again. |
+| the clone asks for a username and password and rejects them | servers like GitHub no longer accept account passwords. Let Git Credential Manager open the browser window and sign in there. |
+| the clone works but files keep locking, or `.venv` behaves strangely | you cloned inside a OneDrive-synced folder. Clone into a plain local path such as `C:\dev\` instead. |
 
 ## Python on Windows
 
@@ -176,7 +267,8 @@ py -3.13 -m venv .venv
 
 ## Setup
 
-1. Get the code:
+1. Get the code. On Windows, run this from PowerShell in a plain local
+   folder such as `C:\dev` — not inside a OneDrive-synced one:
 
    ```
    git clone <REPOSITORY-URL>
