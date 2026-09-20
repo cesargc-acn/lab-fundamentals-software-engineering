@@ -186,7 +186,9 @@ def command_setup(_args):
         print("      Interpreter in use: %s" % sys.executable)
         print("      Install a newer Python, or create the virtual environment "
               "with it:")
-        print("      python3.12 -m venv .venv")
+        print("      py -3.13 -m venv .venv         # Windows")
+        print("      python3.13 -m venv .venv       # macOS and Linux")
+        print("      See 'Python on Windows' in README.md for how to install it.")
         return 1
 
     if not REQUIREMENTS.exists():
