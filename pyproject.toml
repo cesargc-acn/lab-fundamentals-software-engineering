@@ -1,0 +1,19 @@
+[project]
+name = "course-booking"
+version = "0.1.0"
+description = "Course Booking API - hands-on lab for Fundamentals of Software Engineering"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+markers = [
+    "stage0: characterization tests for the legacy code (green before you write anything)",
+    "stage1: domain and enrollment policy",
+    "stage2: repository and dependency injection",
+    "stage3: domain errors and validation",
+    "stage4: fastapi routes, dependencies and http codes",
+    "stage5: async, when and why",
+]
