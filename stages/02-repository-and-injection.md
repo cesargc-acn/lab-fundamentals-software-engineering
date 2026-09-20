@@ -4,6 +4,8 @@
 `src/course_booking/services/enrollment_service.py`, and `notifications.py` for
 the optional task.
 **Run the tests with:** `python workshop.py test 2`
+**If stage 1 never went green:** start this one from `solutions/stage-01/`
+rather than staying blocked — [Solutions](../README.md#solutions) says how.
 
 ---
 

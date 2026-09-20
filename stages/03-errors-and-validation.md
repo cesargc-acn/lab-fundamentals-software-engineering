@@ -4,6 +4,8 @@
 `src/course_booking/services/enrollment_service.py`,
 `src/course_booking/schemas.py`.
 **Run the tests with:** `python workshop.py test 3`
+**If stage 2 never went green:** start this one from `solutions/stage-02/`
+rather than staying blocked — [Solutions](../README.md#solutions) says how.
 
 ---
 

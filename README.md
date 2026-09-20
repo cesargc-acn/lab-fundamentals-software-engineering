@@ -35,7 +35,7 @@ README.md                       this page
 GLOSSARY.md                     every term the statements use, defined
 stages/                         the five statements. Read one before you code
 tests/                          the tests. You never edit these
-solutions/                      one finished version per stage, plus NOTES.md
+solutions/                      the project at the end of each stage, plus notes
 src/course_booking/             your code. Every TODO lives here
 ├── legacy_booking.py           the code you start from. Leave it alone
 ├── payments.py                 a slow external call, for stage 5
@@ -416,21 +416,54 @@ In this order, and there is no shame in reaching step 4:
 2. **Run `python workshop.py hint <stage>`.** Short nudges towards the idea,
    with no code in them.
 3. **Read the theory reference** at the bottom of the stage statement.
-4. **Open `solutions/stage-0N/`** and compare. Reading a solution you then
-   retype and understand beats staring at a blank file for forty minutes.
+4. **Open `solutions/stage-0N/`.** Compare it with your own file, or take it
+   as the starting point for the next stage and keep moving. Both are normal
+   uses — see [Solutions](#solutions).
 
 ## Solutions
 
-Each stage has a reference implementation under `solutions/`. It is one way to
-solve it, not the only one. Look at it whenever you want: to compare it with
-your own version, to get unstuck, or to move on to the next stage if you would
-rather not stay blocked.
+`solutions/` holds five directories, one per stage. Each one is **the whole
+project as it looks at the end of that stage**, not only the files you touched
+in it. `solutions/stage-03/` is every file of `src/`, with stages 1, 2 and 3
+written and stages 4 and 5 still marked TODO — exactly how your own `src/`
+should look the minute `python workshop.py test 3` goes green.
 
-`solutions/stage-03/` is the whole project as it stands at the end of stage 3 —
-runnable, with the stages after it still marked TODO. Each one also has a
-`NOTES.md` explaining the decisions the code does not explain, and saying which
-other answers are equally correct. That last section is usually worth more than
-the code next to it.
+That is why there are five and not one finished version. One finished version
+answers *what does the end look like*. This lab has to answer a different
+question five times: *what should I have by now, and what should still be
+missing?*
+
+They are one way to solve each stage, never the only one, and they are there
+for three different moments.
+
+### To compare, once a stage is green
+
+Open the matching directory next to your own file and read the differences.
+Most of these tasks have several correct answers and yours may well be one of
+them, so a difference is something to think about, not a mistake to go and fix.
+
+### To read, when you are stuck
+
+Retyping a solution you then understand beats staring at a blank file for forty
+minutes. This is step 4 of [When you get stuck](#when-you-get-stuck) and it is
+a normal step, not a failure.
+
+### To catch up, when a stage will not come out
+
+Because each directory is a complete project, you can take one as your new
+starting point and go on with the next stage instead of staying blocked. That
+is the reason the stages after it are still marked TODO in there.
+
+`python workshop.py test 2` is green again, the TODOs of stages 3, 4 and 5 are
+waiting in the files, and you can open the stage 3 statement and keep going.
+
+### Every directory also has a NOTES.md
+
+And it is usually worth more than the code beside it. It explains the
+decisions the code cannot explain on its own — why a `Protocol` and not an
+abstract base class, why one comparison is duplicated on purpose — and it
+ends with a list of the other answers that are equally correct. Read that
+last part even when your own version is already green.
 
 ## Pace
 
@@ -440,4 +473,5 @@ signal about you.
 
 There is no mark and nothing to hand in. Reaching stage 3 having understood it
 is worth more than reaching stage 5 by copying, and if a stage is not clicking,
-reading `solutions/` and moving on is a legitimate way to spend the time.
+taking its solution as your starting point and moving on is a legitimate way to
+spend the time. [Solutions](#solutions) shows how.

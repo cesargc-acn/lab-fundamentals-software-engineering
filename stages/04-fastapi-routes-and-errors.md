@@ -4,6 +4,8 @@
 `src/course_booking/api/routers/enrollments.py`,
 `src/course_booking/api/dependencies.py`, `src/course_booking/main.py`.
 **Run the tests with:** `python workshop.py test 4`
+**If stage 3 never went green:** start this one from `solutions/stage-03/`
+rather than staying blocked — [Solutions](../README.md#solutions) says how.
 
 ---
 
