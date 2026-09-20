@@ -1,5 +1,17 @@
 # Stage 2 — notes on this implementation
 
+Read this after your own version is green, or when you are stuck and want to
+see one way through. The code next to it is *a* solution, not *the* solution.
+
+**The short version**
+
+- The protocols name the questions the caller asks, never the storage that
+  answers them. A protocol saying `execute(sql)` would invert nothing.
+- The repositories hand out copies, so that "I changed the object" and "I
+  saved the object" stay two different events, exactly as in a database.
+- The service takes four collaborators and builds none, which is the only
+  reason the swap test at the bottom of the stage can exist.
+
 ## Why this implementation
 
 The two protocols are written from the caller's side. `get_by_id`, `list_available_courses` and `exists_for` are the questions the service needs answered; none of them mentions a table, a query or a connection. That is the difference between an interface and a leaked implementation: a protocol that said `execute(sql)` would technically invert the dependency and would still tie the service to a relational database forever.

@@ -3,6 +3,10 @@
 The two protocols are the interesting part. They are written from the point of
 view of the caller: the service says "give me the course with this id", not
 "run this query". Everything below them is one possible answer.
+
+Stage 2, first half. Two protocols and two dict-backed implementations of them.
+The rule that catches most people is at the bottom of every implementation
+TODO: hand out copies, never the stored object.
 """
 
 from __future__ import annotations

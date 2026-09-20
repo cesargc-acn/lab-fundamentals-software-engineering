@@ -2,6 +2,10 @@
 
 A router knows the HTTP vocabulary: paths, status codes, response models.
 It knows nothing about enrollment rules, and it never decides what a 404 means.
+
+Stage 4. `GET /courses` below is given and working: read it first, because it
+already shows the three things the two routes you have to write need -- the
+decorator, the `Depends` parameter, and `CourseResponse.from_course`.
 """
 
 from __future__ import annotations
@@ -21,8 +25,10 @@ router = APIRouter(prefix="/courses", tags=["courses"])
 
 # @todo stage=4 id=5 kind=optional
 # @text Add `limit` and `offset` query parameters to the route below, with
-# @text sensible defaults, and slice the list the repository returns. Use
-# @text `Query(...)` so the bounds show up in /docs. Nothing tests this one.
+# @text sensible defaults, and slice the list the repository returns. Declare
+# @text them with `Query(default=..., ge=..., le=...)` so the bounds show up in
+# @text /docs and FastAPI rejects a negative offset for you. Nothing tests this
+# @text one.
 # @at 0
 @router.get("", response_model=List[CourseResponse])
 def list_courses(
@@ -44,12 +50,16 @@ def list_courses(
 
 
 # @todo stage=4 id=1 kind=core
-# @text Finish the two routes below. `POST /courses` creates a course from the
-# @text request body and answers 201 with a `CourseResponse`.
-# @text `GET /courses/{course_id}` answers with the course, and raises
-# @text `CourseNotFoundError` when there is none: the router does not know that
-# @text is a 404, and it does not need to. Say `response_model` and
-# @text `status_code` in the decorator rather than building a `Response`.
+# @text Finish the two routes below.
+# @text - `POST /courses`: build a `Course` from the request body, `save` it,
+# @text and answer 201 with a `CourseResponse`. 201 is not the default, so say
+# @text `status_code=201` in the decorator rather than building a `Response`.
+# @text - `GET /courses/{course_id}`: return the course. When `get_by_id`
+# @text answers None, `raise CourseNotFoundError(course_id)` and stop there.
+# @text The router does not know that is a 404 and does not need to; the
+# @text handler in main.py decides.
+# @text | Say `response_model=CourseResponse` in both decorators, the way the
+# @text given route above does, so /docs describes what comes back.
 # @at 0
 @router.post("")
 def create_course(

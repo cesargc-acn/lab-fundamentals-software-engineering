@@ -3,6 +3,10 @@
 Create the app, plug the routers in, say what each domain error means in HTTP.
 If you ever find yourself writing an `if` in this file, it belongs somewhere
 else.
+
+Stage 4. The app, the routers and `/health` are given; the exception handlers
+at the bottom are yours. A handler registered here applies to every route in
+every router, which is why no router in this project contains a single `try`.
 """
 
 from __future__ import annotations

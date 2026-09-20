@@ -3,6 +3,10 @@
 A schema is not an entity. `Course` is what the domain reasons about;
 `CourseResponse` is what a client is allowed to see. Keeping them apart is why
 you can rename a field in the domain without breaking every consumer.
+
+Stage 3, second half. `CreateCourseRequest` and `CourseResponse` are given and
+complete: read them first, because the two classes you have to write are the
+same idea with different fields.
 """
 
 from __future__ import annotations
@@ -63,10 +67,13 @@ class CreateEnrollmentRequest(BaseModel):
     """What a client sends to put a student on a course."""
 
     # @todo stage=3 id=3 kind=core
-    # @text Declare the fields this request carries: `course_id`, `student_id`,
-    # @text `name` and `email` as strings, and `has_payment_method` as a bool
-    # @text that defaults to False. Look at `CreateCourseRequest` above for the
-    # @text way to say "this string may not be empty".
+    # @text Declare the fields a client may send:
+    # @text - `course_id`, `student_id` and `name`: strings, none of them empty;
+    # @text - `email`: a string;
+    # @text - `has_payment_method`: a bool that defaults to False, because a
+    # @text client that says nothing has not said yes.
+    # @text | `CreateCourseRequest` above shows how to say "this string may not
+    # @text be empty" with `Field(min_length=1)`.
     # @stub pass
     # @at 3
     course_id: str = Field(min_length=1)
@@ -77,9 +84,11 @@ class CreateEnrollmentRequest(BaseModel):
     # @end
 
     # @todo stage=3 id=4 kind=optional
-    # @text Add a field validator on `email`. Pydantic has already checked it
-    # @text is a string; your check runs after that. Reject the value by
-    # @text raising `ValueError` with a message a human can read.
+    # @text Add a field validator on `email`, the way
+    # @text `course_type_must_be_known` does it above. Pydantic has already
+    # @text checked the value is a string; your check runs after that. Reject
+    # @text it by raising `ValueError` with a message a human can read, and
+    # @text return the value when it is fine.
     # @stub none
     # @at 3
     @field_validator("email")
@@ -96,9 +105,11 @@ class EnrollmentResponse(BaseModel):
     """What the API hands back once a student holds a seat."""
 
     # @todo stage=3 id=3 kind=core
-    # @text Four fields: `enrollment_id`, `course_id`, `student_id` and
-    # @text `status`, all strings. Notice what is not here: the student's email
-    # @text never went out in a response, and it does not start now.
+    # @text Four string fields, and no validation to add: `enrollment_id`,
+    # @text `course_id`, `student_id`, `status`.
+    # @text | Notice what is not here. The email came in on the request and
+    # @text does not go out on the response, and being able to make that
+    # @text decision is the entire reason a response model is a separate class.
     # @stub pass
     # @at 3
     enrollment_id: str

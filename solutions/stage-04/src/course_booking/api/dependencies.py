@@ -2,6 +2,15 @@
 
 This file is the composition root: the one place that knows which concrete
 class goes behind each protocol. Delete it and the domain still compiles.
+
+Stage 4. Every function here is a "provider": it builds one thing and returns
+it. A route never builds anything itself, it asks with `Depends(provider)`, and
+FastAPI calls the provider first and passes the result in. That indirection is
+what lets `tests/conftest.py` swap the repositories with
+`app.dependency_overrides` without a single change to the routes.
+
+Write the providers before the routes, or the routes will have nothing to ask
+for.
 """
 
 from __future__ import annotations

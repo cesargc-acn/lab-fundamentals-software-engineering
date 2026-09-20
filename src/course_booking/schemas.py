@@ -3,6 +3,10 @@
 A schema is not an entity. `Course` is what the domain reasons about;
 `CourseResponse` is what a client is allowed to see. Keeping them apart is why
 you can rename a field in the domain without breaking every consumer.
+
+Stage 3, second half. `CreateCourseRequest` and `CourseResponse` are given and
+complete: read them first, because the two classes you have to write are the
+same idea with different fields.
 """
 
 from __future__ import annotations
@@ -62,21 +66,28 @@ class CourseResponse(BaseModel):
 class CreateEnrollmentRequest(BaseModel):
     """What a client sends to put a student on a course."""
 
-    # TODO [stage-3] 3 (core): Declare the fields this request carries: `course_id`,
-    #     `student_id`, `name` and `email` as strings, and `has_payment_method` as a
-    #     bool that defaults to False. Look at `CreateCourseRequest` above for the way
-    #     to say "this string may not be empty".
+    # TODO [stage-3] 3 (core): Declare the fields a client may send:
+    #     - `course_id`, `student_id` and `name`: strings, none of them empty;
+    #     - `email`: a string;
+    #     - `has_payment_method`: a bool that defaults to False, because a client that
+    #       says nothing has not said yes.
+    #     `CreateCourseRequest` above shows how to say "this string may not be empty"
+    #     with `Field(min_length=1)`.
     pass
 
-    # TODO [stage-3] 4 (optional): Add a field validator on `email`. Pydantic has
-    #     already checked it is a string; your check runs after that. Reject the value
-    #     by raising `ValueError` with a message a human can read.
+    # TODO [stage-3] 4 (optional): Add a field validator on `email`, the way
+    #     `course_type_must_be_known` does it above. Pydantic has already checked the
+    #     value is a string; your check runs after that. Reject it by raising
+    #     `ValueError` with a message a human can read, and return the value when it
+    #     is fine.
 
 
 class EnrollmentResponse(BaseModel):
     """What the API hands back once a student holds a seat."""
 
-    # TODO [stage-3] 3 (core): Four fields: `enrollment_id`, `course_id`, `student_id`
-    #     and `status`, all strings. Notice what is not here: the student's email
-    #     never went out in a response, and it does not start now.
+    # TODO [stage-3] 3 (core): Four string fields, and no validation to add:
+    #     `enrollment_id`, `course_id`, `student_id`, `status`.
+    #     Notice what is not here. The email came in on the request and does not go
+    #     out on the response, and being able to make that decision is the entire
+    #     reason a response model is a separate class.
     pass

@@ -3,6 +3,10 @@
 A schema is not an entity. `Course` is what the domain reasons about;
 `CourseResponse` is what a client is allowed to see. Keeping them apart is why
 you can rename a field in the domain without breaking every consumer.
+
+Stage 3, second half. `CreateCourseRequest` and `CourseResponse` are given and
+complete: read them first, because the two classes you have to write are the
+same idea with different fields.
 """
 
 from __future__ import annotations

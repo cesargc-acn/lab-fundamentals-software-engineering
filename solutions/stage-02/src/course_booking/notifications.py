@@ -1,7 +1,9 @@
 """Telling a student they are in.
 
-Given, except for the two optional TODOs. `FakeNotificationSender` is what the
-tests use: it records what would have been sent instead of sending it.
+Given, except for the two optional TODOs -- so nothing in this file is needed
+to make a test go green. `FakeNotificationSender` is what the tests use: it
+records what would have been sent instead of sending it, which is what a fake
+is and why this project never reaches for a mocking library.
 """
 
 from __future__ import annotations

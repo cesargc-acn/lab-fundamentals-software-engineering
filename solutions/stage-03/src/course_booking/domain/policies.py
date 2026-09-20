@@ -2,6 +2,11 @@
 
 One rule per course type, each one small enough to read in a breath. The
 service never asks "what type of course is this?"; it asks a policy.
+
+Stage 1 happens here. You write one protocol and three tiny classes; the two
+classes at the bottom of the file are given and need no changes. The rules you
+are copying are in `legacy_booking.enroll_student`, and the eight cases they
+have to agree on are the `LEGACY_DECISIONS` table in `tests/conftest.py`.
 """
 
 from __future__ import annotations

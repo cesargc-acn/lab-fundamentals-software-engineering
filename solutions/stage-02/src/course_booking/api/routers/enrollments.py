@@ -2,6 +2,9 @@
 
 The enrollment route is three lines long, and that is the measure of whether
 stage 2 went well: everything it would have contained lives in the service.
+
+Stage 4. One route to write. If yours grows an `if`, a rule or a repository
+lookup, it has taken work that belongs to `EnrollmentService`.
 """
 
 from __future__ import annotations
@@ -19,11 +22,15 @@ from ..dependencies import get_enrollment_service, get_payment_gateway
 router = APIRouter(prefix="/enrollments", tags=["enrollments"])
 
 
-# TODO [stage-4] 2 (core): Finish the route below: turn the request into a `Student`,
-#     hand it to the service, and answer 201 with an `EnrollmentResponse`. A created
-#     resource is a 201, and 201 is not the default, so say so in the decorator. None
-#     of the three domain errors is caught here; `main.py` turns each of them into a
-#     status code, once, for every router.
+# TODO [stage-4] 2 (core): Finish the route below, in three steps:
+#     - build a `Student` out of the four student fields on the payload;
+#     - call `service.enroll_student(payload.course_id, student)`;
+#     - return an `EnrollmentResponse` built from what came back.
+#     Answer 201: a created resource is a 201, and 201 is not the default, so say
+#     `status_code=201` in the decorator.
+#     Catch nothing. All three domain errors travel straight out of this function, and
+#     `main.py` turns each one into a status code, once, for every router that will
+#     ever exist.
 @router.post("")
 def create_enrollment(
     payload: CreateEnrollmentRequest,

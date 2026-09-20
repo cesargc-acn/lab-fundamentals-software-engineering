@@ -3,6 +3,17 @@
 Every error carries the data a caller needs to explain itself. Nothing in here
 knows about HTTP: turning an error into a status code is the API's job, and it
 happens in one place, `main.py`.
+
+Stage 3, first half. Each class needs one `__init__` that does two things:
+store the ids as attributes, so a caller never has to parse a message, and pass
+a readable sentence to `super().__init__`, because that sentence is what the
+client will read as `detail` once stage 4 wires the handlers up.
+
+    class OrderTooLargeError(DomainError):
+        def __init__(self, order_id: str, limit: int) -> None:
+            self.order_id = order_id
+            self.limit = limit
+            super().__init__("Order %r is over the limit of %d" % (order_id, limit))
 """
 
 from __future__ import annotations

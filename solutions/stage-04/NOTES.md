@@ -1,5 +1,18 @@
 # Stage 4 — notes on this implementation
 
+Read this after your own version is green, or when you are stuck and want to
+see one way through. The code next to it is *a* solution, not *the* solution.
+
+**The short version**
+
+- The mapping from domain error to status code lives on the app, once, so no
+  router ever has to know that a missing course is a 404.
+- `dependencies.py` is the only file that knows the concrete classes exist.
+- Routes ask with `Depends` instead of building, which is the single reason
+  tests can substitute the repositories.
+- Reads go straight to the repository and writes go through the service,
+  because only one of the two has rules attached to it.
+
 ## Why this implementation
 
 The exception handlers live in `main.py` and not in the routers. A router that catches `CourseNotFoundError` and returns a 404 is not wrong, it just has to be written again in the next router, and the third time somebody will pick 400 instead of 404 and nobody will notice for a month. Registering the handler on the app makes the mapping from domain error to status code a property of the application, decided once, and it is the reason `POST /enrollments` can answer 404, 409 and 422 without containing a single `try`.

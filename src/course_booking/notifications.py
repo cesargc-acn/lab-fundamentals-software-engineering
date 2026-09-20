@@ -1,7 +1,9 @@
 """Telling a student they are in.
 
-Given, except for the two optional TODOs. `FakeNotificationSender` is what the
-tests use: it records what would have been sent instead of sending it.
+Given, except for the two optional TODOs -- so nothing in this file is needed
+to make a test go green. `FakeNotificationSender` is what the tests use: it
+records what would have been sent instead of sending it, which is what a fake
+is and why this project never reaches for a mocking library.
 """
 
 from __future__ import annotations
@@ -31,9 +33,13 @@ class NotificationSender(Protocol):
 
 # TODO [stage-1] 5 (optional): `legacy_booking.enroll_student` builds the email in the
 #     middle of the enrollment logic, and `EmailNotificationSender` below repeats the
-#     same trick. Give that message a name and a home of its own: write
-#     `build_enrollment_message(course, student) -> Notification` here, and have the
-#     sender call it instead of formatting strings itself.
+#     same trick. Give that message a name and a home of its own:
+#     - write `build_enrollment_message(course: Course, student: Student) ->
+#       Notification` here, moving the string formatting into it;
+#     - have `EmailNotificationSender.notify_enrollment` call it instead of formatting
+#       anything itself.
+#     No test covers this one. You will know it worked if the sender is down to two
+#     lines and a `print`.
 
 
 class EmailNotificationSender:
@@ -72,8 +78,9 @@ class FakeNotificationSender:
         return notification
 
 
-# TODO [stage-2] 5 (optional): Write a factory `create_notification_sender(channel)`
-#     that returns the sender for a channel name: "email" or "fake". The caller asks
-#     for a channel and gets back something that satisfies `NotificationSender`; it
-#     never learns which class it got. If you do this one, wire it into
-#     `api/dependencies.py` when you reach stage 4.
+# TODO [stage-2] 5 (optional): Write a factory `create_notification_sender(channel:
+#     str) -> NotificationSender` that returns the sender registered under a channel
+#     name: "email" or "fake". Raise `ValueError` for anything else.
+#     The caller asks for a channel and gets back something that satisfies
+#     `NotificationSender`, never learning which class it got. If you do this one,
+#     wire it into `api/dependencies.py` when you reach stage 4.

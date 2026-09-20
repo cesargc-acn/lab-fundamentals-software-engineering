@@ -1,5 +1,16 @@
 # Stage 1 — notes on this implementation
 
+Read this after your own version is green, or when you are stuck and want to
+see one way through. The code next to it is *a* solution, not *the* solution.
+
+**The short version**
+
+- A `Protocol` describes the shape a caller needs; nothing has to inherit
+  from it, so the dependency points from the caller to the description.
+- `CourseTypeEnrollmentPolicy` is a policy that picks a policy, which is what
+  keeps the service down to a single injected rule.
+- Two lines of duplication beat one layer of indirection at this size.
+
 ## Why this implementation
 
 `EnrollmentPolicy` is a `typing.Protocol` and not an abstract base class. An ABC would force every policy to inherit from it, which means the policy has to import the domain before the domain can use the policy. A protocol reverses that: it describes the shape a caller needs, and any object with a matching `can_enroll` satisfies it without knowing the protocol exists. The dependency points from the caller to the description, and never the other way round.

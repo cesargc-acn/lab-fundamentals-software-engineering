@@ -2,6 +2,10 @@
 
 A router knows the HTTP vocabulary: paths, status codes, response models.
 It knows nothing about enrollment rules, and it never decides what a 404 means.
+
+Stage 4. `GET /courses` below is given and working: read it first, because it
+already shows the three things the two routes you have to write need -- the
+decorator, the `Depends` parameter, and `CourseResponse.from_course`.
 """
 
 from __future__ import annotations

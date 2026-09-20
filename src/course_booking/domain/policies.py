@@ -2,6 +2,11 @@
 
 One rule per course type, each one small enough to read in a breath. The
 service never asks "what type of course is this?"; it asks a policy.
+
+Stage 1 happens here. You write one protocol and three tiny classes; the two
+classes at the bottom of the file are given and need no changes. The rules you
+are copying are in `legacy_booking.enroll_student`, and the eight cases they
+have to agree on are the `LEGACY_DECISIONS` table in `tests/conftest.py`.
 """
 
 from __future__ import annotations
@@ -14,11 +19,12 @@ from .models import Course, Student
 class EnrollmentPolicy(Protocol):
     """A rule that answers one question: may this student take this course?"""
 
-    # TODO [stage-1] 1 (core): Declare the one method of the protocol: `can_enroll`,
-    #     taking a `Course` and a `Student` and returning a `bool`. A protocol method
-    #     has no implementation, so its body is a literal `...`. Nothing has to
-    #     inherit from this class: any object with a matching `can_enroll` already
-    #     satisfies it.
+    # TODO [stage-1] 1 (core): Declare the one method of this protocol, exactly like
+    #     this, with a literal `...` as the whole body:
+    #     - `def can_enroll(self, course: Course, student: Student) -> bool:`
+    #     A protocol lists what a caller may ask for and implements none of it.
+    #     Nothing has to inherit from this class: any object with a matching
+    #     `can_enroll` already satisfies it.
     pass
 
 
@@ -28,7 +34,9 @@ class FreeEnrollmentPolicy:
     def can_enroll(self, course: Course, student: Student) -> bool:
         """Return True when `student` may take `course`."""
         # TODO [stage-1] 2 (core): Read what `legacy_booking.enroll_student` does when
-        #     the course type is "free" and say the same thing in one line.
+        #     the course type is "free", and say the same thing in one line. It does
+        #     not count seats there, so neither do you. Return a real `bool`: the test
+        #     compares with `is True`.
         raise NotImplementedError("TODO [stage-1] 2")
 
 
@@ -37,9 +45,10 @@ class LimitedCapacityPolicy:
 
     def can_enroll(self, course: Course, student: Student) -> bool:
         """Return True when `student` may take `course`."""
-        # TODO [stage-1] 3 (core): Compare how many students are already enrolled with
-        #     the number of seats. `Course` carries both numbers, and a `seats_left`
-        #     property if you prefer it.
+        # TODO [stage-1] 3 (core): Return True while there is a seat left and False
+        #     once there is not. `Course` carries `enrolled_count` and `capacity`, and
+        #     a `seats_left` property if you prefer reading it that way. Mind the
+        #     boundary: 2 of 2 seats taken means full.
         raise NotImplementedError("TODO [stage-1] 3")
 
 
@@ -48,9 +57,11 @@ class PaidEnrollmentPolicy:
 
     def can_enroll(self, course: Course, student: Student) -> bool:
         """Return True when `student` may take `course`."""
-        # TODO [stage-1] 4 (core): A paid course asks two questions, not one: is there
-        #     a seat left, and does the student have a payment method? Both have to be
-        #     true. Check `legacy_booking` if you are unsure of the order.
+        # TODO [stage-1] 4 (core): A paid course asks two questions, not one, and both
+        #     have to be true:
+        #     - is there a seat left, as in the policy above?
+        #     - does the student have one? `Student.has_payment_method`.
+        #     Check `legacy_booking` if you are unsure of the order.
         raise NotImplementedError("TODO [stage-1] 4")
 
 

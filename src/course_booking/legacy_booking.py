@@ -7,6 +7,12 @@ problem with this file is not that it is broken.
 Leave it exactly as it is. The stages that follow rebuild it next to it, and the
 characterization tests stay green the whole time as proof that you understood
 what the old code did before you replaced it.
+
+Read it once before stage 1, looking for three things: where the input
+validation stops and the business rules start, the `if/elif` chain on the
+course type, and the email that gets formatted inline at the bottom. Those are
+the three jobs this one function is doing, and the next five stages give each
+of them a home.
 """
 
 COURSES = {

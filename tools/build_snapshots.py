@@ -17,6 +17,8 @@ Template syntax, all of it inside comments:
 
     # @todo stage=1 id=2 kind=core        declares a TODO for this region
     # @text one line of the instruction   (repeatable, follows its @todo)
+    # @text - a line starting with "- "   starts a bullet in the rendered comment
+    # @text | a line starting with "| "   starts a plain paragraph, marker stripped
     # @stub pass                          stub flavour: raise (default)/pass/none
     # @at 0                               code used from level 0 on
     # @at 1                               code used from level 1 on
@@ -84,19 +86,48 @@ class Region:
 
 def comment_block(indent, todo):
     head = "# %s (%s): " % (todo.label, todo.kind)
-    words = " ".join(todo.text).split()
-    lines = []
-    current = indent + head
     prefix = indent + "#     "
+    lines = []
+    for index, paragraph in enumerate(paragraphs(todo.text)):
+        start = indent + head if index == 0 else prefix
+        continuation = prefix + ("  " if paragraph.startswith("- ") else "")
+        wrap_paragraph(lines, start, continuation, paragraph.split())
+    return lines
+
+
+def paragraphs(text_lines):
+    """Group the @text lines of one TODO into paragraphs.
+
+    A line starting with `- ` opens a bullet, so an instruction with three
+    separate things to do comes out as three items the reader can tick off
+    instead of one block of prose. A line starting with `| ` opens a plain
+    paragraph, which is how you stop a bullet list and go back to flowing text;
+    the marker itself is not printed. Everything else keeps flowing.
+    """
+    grouped = []
+    for line in text_lines:
+        if line.startswith("| "):
+            grouped.append(line[2:])
+        elif line.startswith("- ") or not grouped:
+            grouped.append(line)
+        else:
+            grouped[-1] += " " + line
+    return grouped
+
+
+def wrap_paragraph(lines, start, continuation, words):
+    """Append `words` to `lines`, wrapped at COMMENT_WIDTH."""
+    current = start
+    started = False
     for word in words:
         candidate = current + ("" if current.endswith(" ") else " ") + word
-        if len(candidate) > COMMENT_WIDTH and current.strip() not in ("#", head.strip()):
+        if len(candidate) > COMMENT_WIDTH and started:
             lines.append(current.rstrip())
-            current = prefix + word
+            current = continuation + word
         else:
             current = candidate
+        started = True
     lines.append(current.rstrip())
-    return lines
 
 
 def parse(text):

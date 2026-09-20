@@ -1,5 +1,18 @@
 # Stage 3 — notes on this implementation
 
+Read this after your own version is green, or when you are stuck and want to
+see one way through. The code next to it is *a* solution, not *the* solution.
+
+**The short version**
+
+- An exception is a value: give it fields, so a handler never parses a
+  message to find out which course was missing.
+- `DomainError` exists only so one `except` can catch the family.
+- Request and response models are separate classes because what a client may
+  send and what you are obliged to return are different lists.
+- The log line names `operation` and `error_type` as fields, not as prose,
+  because that is what makes six months of logs filterable.
+
 ## Why this implementation
 
 Each error carries the ids it is about, not just a formatted sentence. The handler in `main.py` could parse a message to find out which course was missing, and it would break the first time somebody improved the wording. An exception is a value: give it fields.

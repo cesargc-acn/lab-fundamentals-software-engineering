@@ -2,6 +2,9 @@
 
 The enrollment route is three lines long, and that is the measure of whether
 stage 2 went well: everything it would have contained lives in the service.
+
+Stage 4. One route to write. If yours grows an `if`, a rule or a repository
+lookup, it has taken work that belongs to `EnrollmentService`.
 """
 
 from __future__ import annotations

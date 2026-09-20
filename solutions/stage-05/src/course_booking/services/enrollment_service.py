@@ -4,6 +4,15 @@
 call it makes returns immediately, so `async` would buy it exactly nothing and
 cost it a keyword on every line. Stage 5 is about the one part of this file
 that does wait for something.
+
+Three stages touch this file, in this order:
+
+    stage 2   build the service and write `enroll_student`
+    stage 3   turn its three silent refusals into raised domain errors
+    stage 5   fix the two async bugs below the banner at the bottom
+
+`_rejection_reason` and `_log_failure` are given. You call them; you do not
+write them.
 """
 
 from __future__ import annotations

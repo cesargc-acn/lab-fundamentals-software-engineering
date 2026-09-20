@@ -1,5 +1,19 @@
 # Stage 5 — notes on this implementation
 
+Read this after your own version is green — and, for this stage, after you
+have written down your own answer to the question in the statement.
+
+**The short version**
+
+- `async def` is not a performance keyword. It is a promise to hand control
+  back, and a blocking call inside one breaks that promise silently.
+- Calling a coroutine function without `await` gives you an object, not a
+  result, and the only warning is a `RuntimeWarning` nobody reads.
+- `asyncio.gather` is for calls that do not depend on each other. Awaiting in
+  a loop is correct whenever they do.
+- `EnrollmentService` stays synchronous because it never waits for anything,
+  and that is the most common async mistake of the three.
+
 ## Why this implementation
 
 `time.sleep` inside an `async def` is the mistake this stage exists for. The function is a coroutine, it is awaited correctly, everything looks asynchronous, and the process still stops dead for a third of a second: nothing else runs, not the other four charges, not the health check. `await asyncio.sleep(...)` differs in exactly one way that matters — it hands control back to the event loop, which is the only thing that ever makes anything concurrent. `async def` is not a performance keyword. It is a promise to yield, and a blocking call breaks it.

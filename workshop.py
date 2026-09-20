@@ -47,13 +47,16 @@ HINTS = {
          "leaves the body as `...`. No policy has to inherit from it."),
         ("2", "core", "FreeEnrollmentPolicy",
          "A free course has no gate. Read what the legacy function does when "
-         "course_type is 'free' and say the same thing in one line."),
+         "course_type is 'free' and say the same thing in one line. Return a "
+         "real bool: the test compares with `is True`."),
         ("3", "core", "LimitedCapacityPolicy",
          "Compare how many students are already enrolled with the number of "
-         "seats. The Course object carries both numbers already."),
+         "seats. The Course object carries both numbers already. Check the "
+         "boundary case: 2 of 2 seats taken means full."),
         ("4", "core", "PaidEnrollmentPolicy",
          "A paid course asks two questions, not one: is there a seat left, and "
-         "does the student have a payment method?"),
+         "does the student have a payment method? Both have to be true, so "
+         "the answer is one expression with `and` in it."),
         ("5", "optional", "notification message",
          "Give the message a name and a home: a function that takes a course "
          "and a student and returns the text. No formatting inside the "
@@ -68,11 +71,14 @@ HINTS = {
          "bool, not an object."),
         ("3", "core", "the in-memory repositories",
          "A dict keyed by id is enough. Decide what save does when the id is "
-         "already stored, and be consistent between both repositories."),
+         "already stored, and be consistent between both repositories. If a "
+         "test complains that something changed without a save, you handed "
+         "back the stored object instead of a copy."),
         ("4", "core", "EnrollmentService",
          "The constructor stores what it is handed and nothing else: no "
          "instantiation, no import of a concrete class. enroll_student then "
-         "reads like the steps on a whiteboard."),
+         "reads like the steps on a whiteboard. Remember that taking a seat "
+         "is two steps, not one: change the count, then save the course."),
         ("5", "optional", "create_notification_sender",
          "One function, one branch, returns a NotificationSender. The caller "
          "never learns which implementation it got."),
@@ -84,7 +90,8 @@ HINTS = {
         ("2", "core", "raise instead of return None",
          "Every `return None` in your service hides a different reason. Give "
          "each reason its own exception and the caller stops guessing. Log the "
-         "failure with operation and error_type before raising."),
+         "failure with operation and error_type before raising, because "
+         "nothing after a raise ever runs."),
         ("3", "core", "the Pydantic schemas",
          "A request model describes what may come in; a response model "
          "describes what goes out. They are not the same model and they do not "
@@ -99,10 +106,12 @@ HINTS = {
          "model. Everything else belongs to the service."),
         ("2", "core", "POST /enrollments",
          "201 is not the default status code. Say it in the decorator rather "
-         "than building a Response by hand."),
+         "than building a Response by hand. The route catches nothing: three "
+         "handlers in main.py do that for every router at once."),
         ("3", "core", "dependencies.py",
          "A dependency is a function that returns the thing. Depends calls it "
-         "for you, and the route never builds a repository itself."),
+         "for you, and the route never builds a repository itself. Write "
+         "these before the routes, or the routes have nothing to ask for."),
         ("4", "core", "the exception handlers",
          "One handler turns one domain error into one HTTP status. Register "
          "them on the app so every router gets the same mapping for free."),
@@ -114,12 +123,15 @@ HINTS = {
         ("1", "core", "the blocking call",
          "Read the function the way the event loop reads it: which line stops "
          "every other request while it waits? There is an awaitable version of "
-         "that call."),
+         "that call. The delay is meant to stay; it is meant to stop "
+         "blocking."),
         ("2", "core", "the forgotten await",
          "Calling an async def hands you a coroutine, not a result. The proof "
-         "shows up in the response body."),
+         "shows up in the response body: start the server and call the payment "
+         "route before you fix it."),
         ("3", "optional", "asyncio.gather",
-         "Three independent calls do not need to take turns."),
+         "Three independent calls do not need to take turns. Awaiting in a "
+         "loop is right only when the next call needs the last answer."),
     ],
 }
 
@@ -237,7 +249,22 @@ def command_test(args):
         return 1
 
     argv, printed = pytest_argv("stage%d" % args.stage)
-    return run(printed, argv, cwd=ROOT)
+    code = run(printed, argv, cwd=ROOT)
+    if code != 0 and args.stage > 0:
+        print()
+        print("Red is the normal state of a stage you have not finished yet.")
+        print("Read the first failure from the top: the test name says what "
+              "was expected,")
+        print("and the message under AssertionError says what went wrong.")
+        print()
+        for command, purpose in (
+            ('grep -rn "TODO \\[stage-%d\\]" src/' % args.stage,
+             "what is still unwritten"),
+            ("python workshop.py hint %d" % args.stage, "nudges, no code"),
+            ("stages/%02d-*.md" % args.stage, "the full statement"),
+        ):
+            print("  %-34s %s" % (command, purpose))
+    return code
 
 
 def command_run(_args):
@@ -266,7 +293,8 @@ def command_hint(args):
         for line in wrap(text, 72):
             print("    " + line)
         print()
-    print("The full statement is in stages/%02d-*.md" % args.stage)
+    print("The full statement is in stages/%02d-*.md, and every term it uses "
+          "is defined in GLOSSARY.md." % args.stage)
     return 0
 
 
